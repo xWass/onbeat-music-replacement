@@ -22,8 +22,52 @@ const player=new Player(client);
 
 player.on("trackStart", (queue, track) => queue.metadata.channel.send({
     embeds: [{
-        title: `Now playing: **${ track.title }** by **${ track.author }**`,
+        title: `Now playing:`,
+        fields: [{
+            name: "Song",
+            value: `${ track.title }`,
+            inline: true,
+        }, {
+            name: "Artist",
+            value: `${ track.author }`,
+            inline: false,
+            }, {
+            name: "Requested by",
+            value: `${ track.requestedBy }`,
+            inline: false
+            }],
         color: 0x00ff00,
+        thumbnail: {
+            url: track.thumbnail,
+        },
+        footer: {
+            text: `Duration: ${ track.duration } | Views: ${ track.views }`,
+        },
+    }],
+}))
+player.on("trackAdd", (queue, track) => queue.metadata.channel.send({
+    embeds: [{
+        title: `Added to queue:`,
+        fields: [{
+            name: "Song",
+            value: `${ track.title }`,
+            inline: true,
+        }, {
+            name: "Artist",
+            value: `${ track.author }`,
+            inline: false,
+            }, {
+            name: "Requested by",
+            value: `${ track.requestedBy }`,
+            inline: false
+            }],
+        color: 0x00ff00,
+        thumbnail: {
+            url: track.thumbnail,
+        },
+        footer: {
+            text: `Duration: ${ track.duration } | Views: ${ track.views }`,
+        },
     }],
 }))
 client.slash=new Collection();

@@ -6,8 +6,8 @@ const chalk=require('chalk');
 
 module.exports={
     data: new SlashCommandBuilder()
-        .setName('pause')
-        .setDescription('Pause a song!'),
+        .setName('shuffle')
+        .setDescription('Shuffle the queue!'),
     async execute(interaction, client, player) {
 
         if (!interaction.member.voice.channelId) return await interaction.reply({
@@ -36,12 +36,12 @@ module.exports={
 
         interaction.reply({
             embeds: [{
-                title: `Music paused!`,
+                title: `Music shuffled!`,
                 color: 0x00ff00,
             }],
             ephemeral: false
         });
-        await q.setPaused(true);
+        await q.shuffle();
 
     },
 };

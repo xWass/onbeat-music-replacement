@@ -26,9 +26,6 @@ player.on("trackStart", (queue, track) => queue.metadata.channel.send(`Now playi
 
 
 
-
-
-
 const cmds=fs.readdirSync('./cmds').filter((file) => file.endsWith('.js'));
 const commands=[];
 for (const file of cmds) {

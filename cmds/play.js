@@ -13,17 +13,24 @@ module.exports={
             .setRequired(true)
             .setDescription('Song to play')),
 
-    async execute(interaction, client) {
-        const song=interaction.getOption('song');
+    async execute(interaction, client, player) {
 
         if (!interaction.member.voice.channelId) return await interaction.reply({
-            content: "You are not in a voice channel!", ephemeral: true
+            embeds: [{
+                title: "You are not in a voice channel!",
+                color: 0xFF0000
+            }],
+            ephemeral: true
         });
         if (interaction.guild.me.voice.channelId&&interaction.member.voice.channelId!==interaction.guild.me.voice.channelId) return await interaction.reply({
-            content: "You are not in my voice channel!", ephemeral: true
+            embeds: [{
+                title: "You are not in my voice channel!",
+                color: 0xFF0000
+            }],
+            ephemeral: true
         });
 
-        const query=interaction.options.get("query").value;
+        const query=interaction.options.get("song").value;
 
         const queue=player.createQueue(interaction.guild, {
             metadata: {
@@ -34,21 +41,36 @@ module.exports={
             if (!queue.connection) await queue.connect(interaction.member.voice.channel);
         } catch {
             queue.destroy();
-            return await interaction.reply({content: "Could not join your voice channel!", ephemeral: true});
+            return await interaction.reply({
+                embeds: [{
+                    title: "I could not join your voice channel!",
+                    color: 0xFF0000
+                }],
+                ephemeral: true
+            });
         }
-        await interaction.deferReply();
+        await interaction.deferReply({ephemeral: true});
         const track=await player.search(query, {
             requestedBy: interaction.user
         }).then(x => x.tracks[0]);
 
         if (!track) return await interaction.followUp({
-            content: `❌ | Track **${ query }** not found!`
+            embeds: [{
+                title: "Track not found!",
+                color: 0xFF0000,
+            }],
+            ephemeral: true
+
         });
 
         queue.play(track);
 
         return await interaction.followUp({
-            content: `⏱️ | Loading track **${ track.title }**!`
+            embeds: [{
+                title: `Loading: ${ track.title } by ${ track.author }`,
+                color: 0x00ff00,
+            }],
+            ephemeral: true
         });
 
     },

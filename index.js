@@ -7,13 +7,11 @@ const fs=require('fs');
 require('dotenv').config();
 const chalk=require("chalk");
 const {Player}=require("discord-player");
+import "discord-player/smoothVolume"
 
 const intents=new Intents();
 intents.add(
     Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_PRESENCES,
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_VOICE_STATES
 );
@@ -22,8 +20,13 @@ const client=new Client({intents, partials: ['MESSAGE', 'REACTION'], allowedMent
 
 const player=new Player(client);
 
-player.on("trackStart", (queue, track) => queue.metadata.channel.send(`Now playing **${ track.title }**`))
-
+player.on("trackStart", (queue, track) => queue.metadata.channel.send({
+    embeds: [{
+        title: `Now playing: **${ track.title }** by **${ track.author }**`,
+        color: 0x00ff00,
+    }],
+}))
+client.slash=new Collection();
 
 
 const cmds=fs.readdirSync('./cmds').filter((file) => file.endsWith('.js'));
@@ -31,6 +34,7 @@ const commands=[];
 for (const file of cmds) {
     const command=require(`./cmds/${ file }`);
     commands.push(command.data.toJSON());
+    client.slash.set(command.data.name, command);
 }
 
 
@@ -52,19 +56,19 @@ const rest=new REST({version: "9"}).setToken(process.env.TOKEN);
 })();
 
 client.once('ready', async () => {
-    for (const file of commandFiles) {
+    for (const file of cmds) {
         console.log(`${ chalk.yellowBright('[SLASH COMMAND LOADED]') } ${ file }`);
     }
 });
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
-    const command=client.SlashCommands.get(interaction.commandName);
+    const command=client.slash.get(interaction.commandName);
 
     if (!command) return;
     console.log(`${ chalk.yellowBright('[EVENT FIRED]') } interactionCreate with command ${ interaction.commandName }`);
     try {
-        await command.execute(interaction, client);
+        await command.execute(interaction, client, player);
     } catch (error) {
         console.error(error);
         interaction.reply({content: `${ error }`, ephemeral: true});

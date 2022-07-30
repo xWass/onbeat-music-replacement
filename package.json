@@ -1,0 +1,30 @@
+{
+  "name": "onbeat-music-replacement",
+  "version": "1.0.0",
+  "description": "a",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xWass/onbeat-music-replacement.git"
+  },
+  "author": "xwass",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xWass/onbeat-music-replacement/issues"
+  },
+  "homepage": "https://github.com/xWass/onbeat-music-replacement#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.8.0",
+    "@discordjs/rest": "^1.0.1",
+    "chalk": "^4.1.2",
+    "discord-api-types": "^0.37.0",
+    "discord-player": "^5.2.2",
+    "discord.js": "^13.9.0",
+    "dotenv": "^16.0.1",
+    "ffmpeg-static": "^5.0.2",
+    "fs": "^0.0.1-security"
+  }
+}

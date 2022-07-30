@@ -7,7 +7,7 @@ const fs=require('fs');
 require('dotenv').config();
 const chalk=require("chalk");
 const {Player}=require("discord-player");
-import "discord-player/smoothVolume"
+require("discord-player/smoothVolume");
 
 const intents=new Intents();
 intents.add(

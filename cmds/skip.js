@@ -28,7 +28,7 @@ module.exports={
         let q=player.getQueue(`${ interaction.guild.id }`);
         if (!q||q===undefined||q.length===0) return await interaction.reply({
             embeds: [{
-                title: "No song is playing!",
+                title: "Nothing is playing!",
                 color: 0x00ff00,
             }],
             ephemeral: true
